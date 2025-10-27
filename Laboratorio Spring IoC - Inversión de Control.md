@@ -329,12 +329,12 @@ import jakarta.annotation.PreDestroy;
 public class Saludo {
     @PostConstruct
     public void init() {
-        System.out.println("Inicializando Saludo...");
+        System.err.println("Inicializando Saludo %s...".formatted(this));
     }
 
     @PreDestroy
     public void destroy() {
-        System.out.println("Destruyendo Saludo...");
+        System.err.println("\nDestruyendo Saludo %s...".formatted(this));
     }
 
     public String obtenerMensaje() {
@@ -345,11 +345,11 @@ public class Saludo {
 
 El resultado al ejecutar es:
 
-    Inicializando Saludo...
+    Inicializando Saludo com.example.model.Saludo@2fefeed3...
     :
     FieldInjectionService - saludo: ¡Bean Saludo completamente operativo!
     :
-    Destruyendo Saludo...
+    Destruyendo Saludo com.example.model.Saludo@2fefeed3...
 
 ## Paso 8: @Scope y @Lazy
 
@@ -805,7 +805,7 @@ Si SaludoInformal es el @Primary, el resultado al ejecutar es:
 `model/SaludoDev.java`
 
 ```java
-@Component
+@Component("profileSaludo")
 @Profile("dev")
 public class SaludoDev implements Saludar {
     public String obtenerMensaje() { return "Hola desarrollador!"; }
@@ -814,7 +814,7 @@ public class SaludoDev implements Saludar {
 `model/SaludoProd.java`
 
 ```java
-@Component
+@Component("profileSaludo")
 @Profile("prod")
 public class SaludoProd implements Saludar {
     public String obtenerMensaje() { return "Bienvenido al sistema en producción."; }
