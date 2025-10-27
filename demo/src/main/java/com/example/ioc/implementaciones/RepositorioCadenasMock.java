@@ -2,6 +2,7 @@ package com.example.ioc.implementaciones;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 
 @RepositoryMock
 //@Repository
+//@Primary
 public class RepositorioCadenasMock implements RepositorioCadenas {
 	@Autowired
 	private NotificationService notify;

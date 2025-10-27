@@ -11,7 +11,7 @@ import com.example.ioc.contratos.ServicioCadenas;
 
 @Service
 //@Primary
-@Profile({"prod", "default"})
+@Profile({"!test"})
 public class ServicioCadenasImpl implements ServicioCadenas {
 	private final RepositorioCadenas dao;
 	private final NotificationService notify;

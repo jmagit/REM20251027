@@ -26,6 +26,7 @@ public class AppConfig {
 	}
 	
 	@Bean
+	@Qualifier("remoto")
 	Sender correo(EMailSender item) {
 		return item;
 	}
@@ -37,7 +38,6 @@ public class AppConfig {
 	}
 	
 	@Bean
-	@Qualifier("remoto")
 	Sender twittea(TwitterSender item) {
 		return item;
 	}

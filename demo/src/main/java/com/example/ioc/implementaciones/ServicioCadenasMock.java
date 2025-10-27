@@ -2,6 +2,7 @@ package com.example.ioc.implementaciones;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 
 @Service
+//@Primary
 //@Profile("test")
 @Pruebas
 public class ServicioCadenasMock implements ServicioCadenas {
