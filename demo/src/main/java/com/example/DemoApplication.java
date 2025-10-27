@@ -56,7 +56,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 	
 //	@Bean
-	CommandLineRunner porNombre(Sender correo, Sender fichero, Sender twittea) {
+	CommandLineRunner beansPorNombre(Sender correo, Sender fichero, Sender twittea) {
 		return arg -> {
 			correo.send("Hola mundo");
 			fichero.send("Hola mundo");
@@ -65,7 +65,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 //	@Bean
-	CommandLineRunner cualificados(@Qualifier("local") Sender local, @Remoto Sender remoto, Sender primario) {
+	CommandLineRunner beansCualificados(@Qualifier("local") Sender local, @Remoto Sender remoto, Sender primario) {
 		return arg -> {
 			primario.send("Hola por defecto");
 			local.send("Hola local");
@@ -74,7 +74,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 //	@Bean
-	CommandLineRunner multiple(List<Sender> senders, Map<String, Sender> mapa, List<Servicio> servicios) {
+	CommandLineRunner multiplesBeans(List<Sender> senders, Map<String, Sender> mapa, List<Servicio> servicios) {
 		return arg -> {
 			senders.forEach(s -> s.send(s.getClass().getCanonicalName()));
 			mapa.forEach((k, v) -> System.out.println("%s -> %s".formatted(k, v.getClass().getCanonicalName())));
@@ -84,7 +84,7 @@ public class DemoApplication implements CommandLineRunner {
 
 
 //	@Bean
-	CommandLineRunner valores(@Value("${mi.valor:Sin valor}") String miValor, Rango rango, @Value("${spring.datasource.url}") String db) {
+	CommandLineRunner inyectaValores(@Value("${mi.valor:Sin valor}") String miValor, Rango rango, @Value("${spring.datasource.url}") String db) {
 		return arg -> {
 			System.out.println(miValor);
 			System.out.println(rango);
@@ -93,7 +93,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 	@Bean
-	CommandLineRunner xml() {
+	CommandLineRunner configuracionEnXML() {
 		return arg -> {
 			try (var contexto = new FileSystemXmlApplicationContext("applicationContext.xml")) {
 				var notify = contexto.getBean(NotificationService.class);
