@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.example.ioc.ClaseNoComponente;
 import com.example.ioc.NotificationService;
@@ -82,7 +83,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 
-	@Bean
+//	@Bean
 	CommandLineRunner valores(@Value("${mi.valor:Sin valor}") String miValor, Rango rango, @Value("${spring.datasource.url}") String db) {
 		return arg -> {
 			System.out.println(miValor);
@@ -91,5 +92,27 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
+	@Bean
+	CommandLineRunner xml() {
+		return arg -> {
+			try (var contexto = new FileSystemXmlApplicationContext("applicationContext.xml")) {
+				var notify = contexto.getBean(NotificationService.class);
+				System.out.println("===================>");
+				var srv = (ServicioCadenas)contexto.getBean("servicioCadenas");
+				System.out.println(srv.getClass().getName());
+				contexto.getBean(NotificationService.class).getListado().forEach(System.out::println);
+				System.out.println("===================>");
+				srv.get().forEach(notify::add);
+				srv.add("Hola mundo");
+				notify.add(srv.get(1));
+				srv.modify("modificado");
+				System.out.println("===================>");
+				notify.getListado().forEach(System.out::println);
+				notify.clear();
+				System.out.println("<===================");
+				((Sender)contexto.getBean("sender")).send("Hola mundo");
+			}
+		};
+	}
 
 }
