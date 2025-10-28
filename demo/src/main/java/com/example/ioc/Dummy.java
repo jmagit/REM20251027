@@ -20,7 +20,7 @@ public class Dummy {
 	}
 
 	public void setDescontrolado(@NonNull String value) {
-		valor = value;
+		valor = value.toUpperCase();
 	}
 
 	public boolean hasDescontrolado() {

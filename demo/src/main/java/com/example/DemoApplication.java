@@ -10,9 +10,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.example.ioc.ClaseNoComponente;
+import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
@@ -37,7 +39,7 @@ public class DemoApplication implements CommandLineRunner {
 	NotificationService notify;
 	@Autowired(required = false) ClaseNoComponente noComponente;
 	
-//	@Bean
+	@Bean
 	CommandLineRunner ejemplosIoC(ServicioCadenas srv) {
 		return arg -> {
 			// ServicioCadenas srv = servicioCadenasMock;
@@ -125,4 +127,8 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
+	@EventListener
+	void eventHandler(GenericoEvent ev) {
+		System.err.println("Evento recibido de %s: %s".formatted(ev.origen(), ev.carga()));
+	}
 }
