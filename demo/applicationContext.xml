@@ -6,7 +6,7 @@
 		https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean name="ctx" class="org.springframework.context.support.ClassPathXmlApplicationContext" />
-	
+
 	<bean id="notify" class="com.example.ioc.NotificationServiceImpl" >
 		<property name="publisher" ref="ctx" />
 	</bean>

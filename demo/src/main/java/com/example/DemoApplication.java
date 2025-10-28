@@ -18,6 +18,7 @@ import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
 import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
+import com.example.ioc.notificaciones.ConstructorConValores;
 import com.example.ioc.notificaciones.Sender;
 
 @SpringBootApplication
@@ -91,13 +92,22 @@ public class DemoApplication implements CommandLineRunner {
 			System.out.println(db);
 		};
 	}
-
 	@Bean
+	CommandLineRunner inyectaPrimitivos(ConstructorConValores demo) {
+		return arg -> {
+//			System.out.println("inyectaPrimitivos ==============================>");
+//			notify.getListado().forEach(System.out::println);
+//			notify.clear();
+//			System.out.println("<==============================");
+		};
+	}
+
+//	@Bean
 	CommandLineRunner configuracionEnXML() {
 		return arg -> {
 			try (var contexto = new FileSystemXmlApplicationContext("applicationContext.xml")) {
 				var notify = contexto.getBean(NotificationService.class);
-				System.out.println("===================>");
+				System.out.println("configuracionEnXML ===================>");
 				var srv = (ServicioCadenas)contexto.getBean("servicioCadenas");
 				System.out.println(srv.getClass().getName());
 				contexto.getBean(NotificationService.class).getListado().forEach(System.out::println);
