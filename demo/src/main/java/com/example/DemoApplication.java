@@ -4,22 +4,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.scheduling.annotation.AsyncAnnotationAdvisor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.aop.AuthenticationService;
+import com.example.aop.StrictNullChecksAspect;
 import com.example.aop.introductions.Visible;
+import com.example.aop.introductions.VisibleAspect;
 import com.example.ioc.ClaseNoComponente;
 import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
@@ -158,7 +164,7 @@ public class DemoApplication implements CommandLineRunner {
 		}
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner asincrono(Dummy dummy) {
 		return arg -> {
 			var obj = dummy; // new Dummy();
@@ -207,7 +213,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner interceptores(ServicioCadenas srv, AuthenticationService auth) {
 		return arg -> {
 			System.out.println(srv.getClass().getSimpleName());
@@ -223,6 +229,37 @@ public class DemoApplication implements CommandLineRunner {
 			} catch (Exception e) {
 				System.err.println("modifico %s -> %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
 			}
+		};
+	}
+	@Bean
+	CommandLineRunner creacionManual(ApplicationContext ctx) {
+		return args -> {
+			Dummy dummy = new Dummy();
+//			AspectJProxyFactory factory = new AspectJProxyFactory(dummy);
+//			factory.addAspect(VisibleAspect.class);
+//			factory.addAspect(StrictNullChecksAspect.class);
+////			factory.addAspect(AsyncAnnotationAdvisor.class);
+//			dummy = factory.getProxy();
+
+			dummy = ctx.getBean(Dummy.class);
+			
+			dummy.ejecutarTareaSimpleAsync(10);
+			if(dummy instanceof Visible v) {
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+				v.mostrar();
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+				v.ocultar();
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+			} else {
+				System.err.println("No implementa Visible");
+			}
+			try {
+				dummy.setDescontrolado(null);
+				System.out.println("Deja poner nulos");
+			} catch (Exception e) {
+				System.err.println("Pon nulo %s -> %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+			}
+
 		};
 	}
 
