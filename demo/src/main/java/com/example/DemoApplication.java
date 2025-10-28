@@ -18,12 +18,15 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.example.aop.AuthenticationService;
+import com.example.aop.introductions.Visible;
 import com.example.ioc.ClaseNoComponente;
 import com.example.ioc.Dummy;
 import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.Remoto;
+import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.Servicio;
 import com.example.ioc.contratos.ServicioCadenas;
 import com.example.ioc.notificaciones.ConstructorConValores;
@@ -139,7 +142,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@EventListener
+//	@EventListener
 	void eventHandler(GenericoEvent ev) {
 		System.err.println("Evento recibido de %s: %s".formatted(ev.origen(), ev.carga()));
 	}
@@ -160,12 +163,66 @@ public class DemoApplication implements CommandLineRunner {
 		return arg -> {
 			var obj = dummy; // new Dummy();
 			System.err.println(obj.getClass().getCanonicalName());
-			obj.ejecutarTareaSimpleAsync(1);
-			obj.ejecutarTareaSimpleAsync(2);
+			obj.ejecutarAutoInvocado(1);
+			obj.ejecutarAutoInvocado(2);
+//			obj.ejecutarTareaSimpleAsync(1);
+//			obj.ejecutarTareaSimpleAsync(2);
 			obj.calcularResultadoAsync(10, 20, 30, 40, 50).thenAccept(result -> notify.add(result));
 			obj.calcularResultadoAsync(1, 2, 3).thenAccept(result -> notify.add(result));
 			obj.calcularResultadoAsync().thenAccept(result -> notify.add(result));
 			System.err.println("Termino de mandar hacer las cosas");
+		};
+	}
+
+//	@Bean
+	CommandLineRunner aop(Configuracion config, Dummy dummy) {
+		return args -> {
+			notify.clear();
+			try {
+				int v = config.getNext();
+				notify.add("Mensaje " + v + config.getNext());
+				notify.getListado().forEach(System.out::println);
+				config.config();
+			} catch (Exception e) {
+				System.err.println("Desde el consejo: " + e.getMessage());
+			}
+			try {
+				dummy.setControlado(null);
+				System.out.println("No llega la excepcion");
+				System.out.println("Controlado: " + dummy.getControlado().get());
+				dummy.setControlado("minuscula");
+				System.out.println("Controlado: " + dummy.getControlado().get());
+			} catch (Exception e) {
+				System.err.println("Error controlado: " + e.getMessage());
+			}
+			if(dummy instanceof Visible v) {
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+				v.mostrar();
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+				v.ocultar();
+				System.out.println(v.isVisible() ? "Es visible" : "Es invisible");
+			} else {
+				System.err.println("No implementa Visible");
+			}
+		};
+	}
+
+	@Bean
+	CommandLineRunner interceptores(ServicioCadenas srv, AuthenticationService auth) {
+		return arg -> {
+			System.out.println(srv.getClass().getSimpleName());
+			srv.get().forEach(notify::add);
+			auth.login();
+			try {
+				srv.add("añado");
+			} catch (Exception e) {
+				System.err.println("añado %s -> %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+			}
+			try {
+				srv.modify("modifico");
+			} catch (Exception e) {
+				System.err.println("modifico %s -> %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+			}
 		};
 	}
 

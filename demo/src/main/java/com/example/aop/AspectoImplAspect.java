@@ -73,6 +73,16 @@ public class AspectoImplAspect {
 //		}
 //		return o;
 //	}
+	
+//	@Around("execution(void com.example.ioc..*.set*(String))")
+//	public void interceptaExcepcion(ProceedingJoinPoint jp) throws Throwable {
+//		System.err.println(">>> Soy el previo interceptaExcepcion " + jp.getSignature());
+//		try {
+//			jp.proceed();
+//		} catch (Exception e) {
+//			System.err.println(">>> Excepcion tratada en el aspecto " + jp.getSignature());
+//		}
+//	}
 
 //	@Around("execution(void com.example.ioc..*.set*(String))")
 //	public void cambiaArgumentos(ProceedingJoinPoint jp) throws Throwable {

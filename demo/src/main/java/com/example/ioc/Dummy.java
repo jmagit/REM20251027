@@ -61,6 +61,10 @@ public class Dummy {
 		System.err.println("<- Tarea simple %d finalizada.".formatted(i));
 	}
 
+	public void ejecutarAutoInvocado(int i) {
+		ejecutarTareaSimpleAsync(i);
+	}
+	
 	@Async
 	public CompletableFuture<String> calcularResultadoAsync(int... input) {
 		return calcularResultado(input);
