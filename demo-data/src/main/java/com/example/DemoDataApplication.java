@@ -20,7 +20,8 @@ public class DemoDataApplication implements CommandLineRunner {
 	@Bean
 	CommandLineRunner demosDatos(EjemplosDatos demos) {
 		return args -> {
-			demos.actores();
+			// demos.actores();
+			demos.consultas();
 		};
 	}
 }
