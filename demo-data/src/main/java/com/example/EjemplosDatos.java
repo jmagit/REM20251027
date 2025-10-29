@@ -8,12 +8,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.contracts.domain.repositories.ActorsRepository;
+import com.example.contracts.domain.repositories.CategoriesRepository;
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.Category;
 
 @Component
 public class EjemplosDatos {
 	@Autowired
 	ActorsRepository daoActors;
+	@Autowired
+	CategoriesRepository daoCategories;
 	
 	public void actores() {
 		var actor = new Actor("Pepito", "Grillo");
@@ -46,5 +50,15 @@ public class EjemplosDatos {
 			System.out.println(item);
 			item.getFilmActors().forEach(p -> System.out.println("\t" + p.getId().getFilmId()));
 		});
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public void transaccion() throws Exception {
+		daoActors.save(new Actor("Pepito", "Grillo"));
+		if(true)
+		throw new Exception("Forzado");
+		daoCategories.save(new Category(1, "kk"));
+		daoActors.save(new Actor("Carmelo", "Coton"));
+		daoActors.deleteById(1);
 	}
 }
