@@ -1,8 +1,15 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 
 
 /**
@@ -19,7 +26,7 @@ public class FilmActor implements Serializable {
 	private FilmActorPK id;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
-	private Timestamp lastUpdate;
+	private LocalDateTime lastUpdate;
 
 	//bi-directional many-to-one association to Actor
 	@ManyToOne
@@ -42,11 +49,11 @@ public class FilmActor implements Serializable {
 		this.id = id;
 	}
 
-	public Timestamp getLastUpdate() {
+	public LocalDateTime getLastUpdate() {
 		return this.lastUpdate;
 	}
 
-	public void setLastUpdate(Timestamp lastUpdate) {
+	public void setLastUpdate(LocalDateTime lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 

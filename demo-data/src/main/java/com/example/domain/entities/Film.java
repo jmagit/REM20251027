@@ -1,10 +1,22 @@
 package com.example.domain.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 
 /**
@@ -26,7 +38,7 @@ public class Film implements Serializable {
 	private String description;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
-	private Timestamp lastUpdate;
+	private LocalDateTime lastUpdate;
 
 	private Integer length;
 
@@ -85,11 +97,11 @@ public class Film implements Serializable {
 		this.description = description;
 	}
 
-	public Timestamp getLastUpdate() {
+	public LocalDateTime getLastUpdate() {
 		return this.lastUpdate;
 	}
 
-	public void setLastUpdate(Timestamp lastUpdate) {
+	public void setLastUpdate(LocalDateTime lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 
