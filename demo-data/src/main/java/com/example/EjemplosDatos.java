@@ -17,7 +17,9 @@ import com.example.domain.entities.model.ActorDTO;
 import com.example.domain.entities.model.ActorShort;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Component
 public class EjemplosDatos {
@@ -133,6 +135,8 @@ public class EjemplosDatos {
 			}
 		});
 		XmlMapper mapperXML = new XmlMapper();
+		mapperXML.registerModule(new JavaTimeModule())
+	            .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);;
 		daoCategories.findAll().forEach(item -> {
 			try {
 				System.out.println(mapperXML.writeValueAsString(item));

@@ -36,7 +36,6 @@ public class Category implements Serializable {
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
 	@JsonProperty("ultima")
 	@JsonFormat(pattern = "dd/MMM/yyyy")
-	@JsonIgnore
 	private LocalDateTime lastUpdate;
 
 	@Column(nullable=false, length=25)
