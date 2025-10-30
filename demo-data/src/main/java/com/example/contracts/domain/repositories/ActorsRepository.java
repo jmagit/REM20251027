@@ -13,6 +13,8 @@ import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.model.ActorDTO;
+import com.example.domain.entities.model.ActorShort;
 
 public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpecificationExecutor<Actor> {
 
@@ -39,4 +41,12 @@ public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpec
 	@EntityGraph(attributePaths = {"filmActors.film"})
 	List<Actor> findNovedadesJPQL();
 	
+	List<ActorDTO> getByIdGreaterThanEqual(int id);
+	List<ActorShort> queryByIdGreaterThanEqual(int id);
+	
+	<T> List<T> searchByIdGreaterThanEqual(int id, Class<T> type);
+
+	@Query("select a.id, a.firstName, a.lastName from Actor a where a.id >= ?1")
+	List<ActorDTO> queryNovedadesJPQL(int id);
+
 }

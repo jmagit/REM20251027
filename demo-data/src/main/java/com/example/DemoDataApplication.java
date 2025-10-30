@@ -20,13 +20,16 @@ public class DemoDataApplication implements CommandLineRunner {
 	@Bean
 	CommandLineRunner demosDatos(EjemplosDatos demos) {
 		return args -> {
-			demos.actores();
-			// demos.consultas();
+//			demos.actores();
+//			 demos.consultas();
 //			try {
 //				demos.transaccion();
 //			} catch (Exception e) {
 //				System.err.println(e.getMessage());
 //			}
+//			demos.proyecciones();
+//			demos.peliculas();
+			demos.categorias();
 		};
 	}
 }

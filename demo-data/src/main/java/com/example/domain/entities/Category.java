@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,13 +34,18 @@ public class Category implements Serializable {
 	private int id;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
+	@JsonProperty("ultima")
+	@JsonFormat(pattern = "dd/MMM/yyyy")
+	@JsonIgnore
 	private LocalDateTime lastUpdate;
 
 	@Column(nullable=false, length=25)
+	@JsonProperty("categoria")
 	private String name;
 
 	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="category")
+	@JsonIgnore
 	private List<FilmCategory> filmCategories;
 
 	public Category() {
