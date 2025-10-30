@@ -17,6 +17,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 
 
 /**
@@ -40,12 +43,14 @@ public class Film implements Serializable {
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
 	private LocalDateTime lastUpdate;
 
+	@Positive
 	private Integer length;
 
 	@Column(length=1)
 	private String rating;
 
 	@Column(name="release_year")
+	@Min(1901) @Max(2155)
 	private Short releaseYear;
 
 	@Column(name="rental_duration", nullable=false)
