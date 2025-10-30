@@ -23,7 +23,7 @@ public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpec
 	List<Actor> findByIdGreaterThanEqual(int id);
 	@Meta(comment = "con JPQL")
 	@Query("from Actor a where a.id >= ?1")
-	@EntityGraph(attributePaths = {"filmActors"})
+	@EntityGraph(attributePaths = {"filmActors.film"})
 	List<Actor> findNovedadesJPQL(int id);
 	@Meta(comment = "con SQL")
 	@NativeQuery("select * from actor a where actor_id >= :id")
@@ -35,5 +35,8 @@ public interface ActorsRepository extends JpaRepository<Actor, Integer>, JpaSpec
 	@Query("from Actor a inner join a.filmActors f where f.lastUpdate >= ?1")
 	List<Actor> findNovedadesJoin(LocalDateTime fecha);
 	
+	@Query("from Actor a where a.id > ?${actor.min.id}")
+	@EntityGraph(attributePaths = {"filmActors.film"})
+	List<Actor> findNovedadesJPQL();
 	
 }

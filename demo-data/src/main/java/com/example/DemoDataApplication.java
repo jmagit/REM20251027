@@ -21,12 +21,12 @@ public class DemoDataApplication implements CommandLineRunner {
 	CommandLineRunner demosDatos(EjemplosDatos demos) {
 		return args -> {
 			// demos.actores();
-//			demos.consultas();
-			try {
-				demos.transaccion();
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-			}
+			demos.consultas();
+//			try {
+//				demos.transaccion();
+//			} catch (Exception e) {
+//				System.err.println(e.getMessage());
+//			}
 		};
 	}
 }

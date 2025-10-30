@@ -46,17 +46,21 @@ public class EjemplosDatos {
 //		daoActors.findAll((root, query, builder) -> builder.lessThan(root.get("id"), 5)).forEach(System.out::println);
 //		daoActors.findParcial(197).forEach(System.out::println);
 //		daoActors.findNovedadesJoin(LocalDateTime.of(2021,  1, 1, 0, 0, 0)).forEach(System.out::println);
-		daoActors.findNovedadesJoin(LocalDateTime.of(2021,  1, 1, 0, 0, 0)).forEach(item -> {
+//		daoActors.findNovedadesJoin(LocalDateTime.of(2021,  1, 1, 0, 0, 0)).forEach(item -> {
+//			System.out.println(item);
+//			item.getFilmActors().forEach(p -> System.out.println("\t" + p.getId().getFilmId()));
+//		});
+		daoActors.findNovedadesJPQL().forEach(item -> {
 			System.out.println(item);
-			item.getFilmActors().forEach(p -> System.out.println("\t" + p.getId().getFilmId()));
+			item.getFilmActors().forEach(p -> System.out.println("\t" + p.getFilm().getTitle()));
 		});
 	}
 	
 	@Transactional(rollbackFor = {Exception.class})
 	public void transaccion() throws Exception {
 		daoActors.save(new Actor("Pepito", "Grillo"));
-		if(true)
-		throw new Exception("Forzado");
+//		if(true)
+//		throw new Exception("Forzado");
 		daoCategories.save(new Category(1, "kk"));
 		daoActors.save(new Actor("Carmelo", "Coton"));
 		daoActors.deleteById(1);
