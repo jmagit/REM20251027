@@ -48,19 +48,19 @@
 
 #### MongoDB
 
-    docker run -d --name mongodb -p 27017:27017 -v .:/externo jamarton/mongodb-contactos
+    docker run -d --name mongodb -p 27017:27017 jamarton/mongodb-contactos
 
 #### Redis
 
-    docker run -d --name redis -p 6379:6379 -p 6380:8001 -v .:/data redis/redis-stack:latest
+    docker run -d --name redis -p 6379:6379 -p 6380:8001 redis/redis-stack:latest
 
 ### Agentes de Mensajería
 
 #### Apache ActiveMQ o Artemis (JMS)
 
-    docker run -d --name activemq -p 1883:1883 -p 5672:5672 -p 8161:8161 -p 61613:61613 -p 61614:61614 -p 61616:61616 jamarton/activemq
+    docker run -d --name activemq -p 1883:1883 -p 5672:5672 -p 8161:8161 -p 61613:61613 -p 61614:61614 -p 61616:61616 apache/activemq-classic
 
-    docker run -d --name artemis -p 1883:1883 -p 5445:5445 -p 5672:5672 -p 8161:8161 -p 9404:9404 -p 61613:61613 -p 61616:61616 jamarton/artemis
+    docker run -d --name artemis -p 1883:1883 -p 5445:5445 -p 5672:5672 -p 8161:8161 -p 9404:9404 -p 61613:61613 -p 61616:61616 apache/activemq-artemis
 
 ### Pruebas
 
