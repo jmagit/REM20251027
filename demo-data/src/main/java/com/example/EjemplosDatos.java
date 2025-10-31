@@ -136,7 +136,7 @@ public class EjemplosDatos {
 		});
 		XmlMapper mapperXML = new XmlMapper();
 		mapperXML.registerModule(new JavaTimeModule())
-	            .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);;
+	            .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
 		daoCategories.findAll().forEach(item -> {
 			try {
 				System.out.println(mapperXML.writeValueAsString(item));

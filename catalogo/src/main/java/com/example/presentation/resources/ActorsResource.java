@@ -4,11 +4,12 @@ import java.net.URI;
 import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.contracts.domain.services.ActorsService;
@@ -68,12 +71,21 @@ public class ActorsResource {
 		return new PagedModel<ActorShort>(srv.getByProjection(page, ActorShort.class));
 	}
 
-	@GetMapping(path = { "/v1/{id}", "/v2/{id}" })
-	public ActorDTO getOne(@PathVariable int id) throws NotFoundException {
+	@GetMapping(path = "/v1/{id}")
+	public ActorDTO getOneSinETag(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
 		return ActorDTO.from(item.get());
+	}
+
+	@GetMapping(path = { "/v2/{id}" })
+	public ResponseEntity<ActorDTO> getOne(@PathVariable int id) throws NotFoundException {
+		var item = srv.getOne(id);
+		if (item.isEmpty())
+			throw new NotFoundException();
+		var dto = ActorDTO.from(item.get());
+		return ResponseEntity.ok().eTag(ETagTools.generate(dto)).body(dto);
 	}
 
 	record Filmografia(int id, String titulo, Short año) {
@@ -117,20 +129,43 @@ public class ActorsResource {
 		return ResponseEntity.created(location).build();
 	}
 
-	@PutMapping(path = { "/v1/{id}", "/v2/{id}" })
+	@PutMapping(path = "/v1/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@SecurityRequirement(name = "bearerAuth")
-	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item)
+	public void updateSinETag(@PathVariable int id, @Valid @RequestBody ActorDTO item)
 			throws NotFoundException, InvalidDataException, BadRequestException {
 		if (id != item.getId())
 			throw new BadRequestException("No coinciden los identificadores");
 		srv.modify(ActorDTO.from(item));
 	}
 
-	@DeleteMapping(path = { "/v1/{id}", "/v2/{id}" })
+	@PutMapping(path = { "/v2/{id}" })
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@SecurityRequirement(name = "bearerAuth")
-	public void delete(@PathVariable int id) {
+	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item, @RequestHeader(value = HttpHeaders.IF_MATCH, required = true) String ifMatch)
+			throws NotFoundException, InvalidDataException, BadRequestException {
+		if (id != item.getId())
+			throw new BadRequestException("No coinciden los identificadores");
+		if(ETagTools.ifMatch(ActorDTO.from(srv.getOne(id).orElseThrow(() -> new NotFoundException())), ifMatch))
+			srv.modify(ActorDTO.from(item));
+		else
+			throw new ResponseStatusException(HttpStatusCode.valueOf(412));
+	}
+
+	@DeleteMapping(path = "/v1/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@SecurityRequirement(name = "bearerAuth")
+	public void deleteSinETag(@PathVariable int id) {
 		srv.deleteById(id);
+	}
+
+	@DeleteMapping(path = { "/v2/{id}" })
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@SecurityRequirement(name = "bearerAuth")
+	public void delete(@PathVariable int id, @RequestHeader(value = HttpHeaders.IF_MATCH, required = true) String ifMatch) {
+		if(ETagTools.ifMatch(ActorDTO.from(srv.getOne(id).orElseThrow(() -> new NotFoundException())), ifMatch))
+			srv.deleteById(id);
+		else
+			throw new ResponseStatusException(HttpStatusCode.valueOf(412));
 	}
 }
