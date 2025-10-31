@@ -38,34 +38,34 @@ public class DemoDataApplication implements CommandLineRunner {
 		};
 	}
 
-//	@Autowired
-//	MessagingService mensajeria;
-//	
-//	@Bean
-//	CommandLineRunner demosCorreos() {
-//		return args -> {
-//			mensajeria.sendEmailAsync("pgrillo@example.com", "Aplicacion Init", "La aplicacion se ha iniciado");
-//			mensajeria.sendWelcomeEmailAsync("pgrillo@example.com", "Pepito Grillo");
-//		};
-//	}
-//	
-//	@PreDestroy
-//	void despidete() {
-//		var body = """
-//<!DOCTYPE html>
-//<html lang="es">
-//<head>
-//    <meta charset="UTF-8">
-//    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//    <title>Servicio</title>
-//</head>
-//<body>
-//    <h1>%s</h1>
-//    <p>%s</p>
-//</body>
-//</html>
-//""".formatted("Aplicacion Close", "La aplicacion se ha cerrado");
-//		mensajeria.sendMimeEmail("pgrillo@example.com", "Aplicacion Close", body, true);
-//	}
+	@Autowired
+	MessagingService mensajeria;
+	
+	@Bean
+	CommandLineRunner demosCorreos() {
+		return args -> {
+			mensajeria.sendEmailAsync("pgrillo@example.com", "Aplicacion Init", "La aplicacion se ha iniciado");
+			mensajeria.sendWelcomeEmailAsync("pgrillo@example.com", "Pepito Grillo");
+		};
+	}
+	
+	@PreDestroy
+	void despidete() {
+		var body = """
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio</title>
+</head>
+<body>
+    <h1>%s</h1>
+    <p>%s</p>
+</body>
+</html>
+""".formatted("Aplicacion Close", "La aplicacion se ha cerrado");
+		mensajeria.sendMimeEmail("pgrillo@example.com", "Aplicacion Close", body, true);
+	}
 
 }
