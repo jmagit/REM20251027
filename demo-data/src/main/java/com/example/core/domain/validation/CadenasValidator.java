@@ -17,4 +17,13 @@ public final class CadenasValidator {
 	public static boolean isNotNIF(String value) {
 		return !isNIF(value);
 	}
+
+	public static boolean isUppercase(String valor) {
+		if(valor == null)
+			throw new IllegalArgumentException("No puede ser nulo");
+		return valor.equals(valor.toUpperCase());
+	}
+	public static boolean isNotUppercase(String valor) {
+		return !isUppercase(valor);
+	}
 }
